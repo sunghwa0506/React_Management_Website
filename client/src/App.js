@@ -6,15 +6,33 @@ import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TableCell from '@material-ui/core/TableCell';
 import React, { Component } from 'react';
+import CircularProgress from '@material-ui/core/CircularProgress';
+import {withStyles} from '@material-ui/core/styles'
+
+const Styles = theme => ({
+  root: {
+    display: 'flex',
+    '& > * + *': {
+      marginLeft: theme.spacing(2),
+    },
+  },
+  progress : {
+    margin:theme.spacing(2)
+  }
+})
+
 
 class App extends Component{
 
-  state = {customer:""}
+
+  state = {customer:"",
+            completed : 0}
 
   componentDidMount(){
     this.callApi()
       .then(res =>this.setState({customer:res}))
-      .catch(err =>console.log(err));
+      .catch(err => console.log(err));
+
   }
 
   callApi = async () =>{
@@ -23,8 +41,10 @@ class App extends Component{
     return body;
   }
 
+
   render(){
 
+    const {classes} = this.props;
 
     return (
       <Table>
@@ -50,7 +70,12 @@ class App extends Component{
 
             </Customer>
           );
-        }) : "" }
+        }) : 
+        <TableRow>
+          <TableCell colSpan = "6" align = "center">
+            <CircularProgress className={classes.progress}></CircularProgress>
+          </TableCell>
+        </TableRow> }
       </TableBody>
       
     </Table>
@@ -59,4 +84,4 @@ class App extends Component{
 }
 
 
-export default App;
+export default withStyles(Styles)(App);
